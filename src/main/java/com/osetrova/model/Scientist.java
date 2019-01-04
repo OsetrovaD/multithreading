@@ -45,11 +45,10 @@ public class Scientist {
                             int number = RandomUtil.generate(MAX_DETAILS_NUMBER) + 1;
                             if (dump.size() > number) {
                                 getDetails(number);
-                                System.out.println(detailsStore);
                             } else {
                                 getDetails(dump.size());
-                                System.out.println(detailsStore);
                             }
+                            System.out.println(detailsStore);
                         }
                     } catch (InterruptedException e) {
                         break;
