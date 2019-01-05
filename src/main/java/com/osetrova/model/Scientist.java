@@ -4,15 +4,16 @@ import com.osetrova.util.RandomUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.HashMap;
+import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Scientist {
 
     @Getter
-    private Map<RobotDetail, Integer> detailsStore = new HashMap<>();
-
+    private Map<RobotDetail, Integer> detailsStore = new EnumMap<>(RobotDetail.class);
 
     public int makeRobot() {
         RobotDetail[] robotDetails = RobotDetail.values();
@@ -20,12 +21,19 @@ public class Scientist {
 
         if (detailsStore.size() == robotDetails.length) {
             result = detailsStore.values().stream()
-                    .sorted()
-                    .findFirst()
+                    .min(Comparator.naturalOrder())
                     .orElse(0);
+            getDetails(result);
         }
 
         return result;
+    }
+
+    private void getDetails(int number) {
+        detailsStore.forEach((k,v) -> detailsStore.merge(k, -number, Integer::sum));
+        detailsStore = detailsStore.entrySet().stream()
+                .filter(e -> e.getValue() != 0)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @AllArgsConstructor
@@ -62,7 +70,7 @@ public class Scientist {
                 int detail = RandomUtil.generate(dump.size());
                 RobotDetail robotDetail = dump.remove(detail);
                 System.out.println(Thread.currentThread().getName() + " забрал " + robotDetail);
-                detailsStore.merge(robotDetail, 1, (oldValue, newValue) -> oldValue + newValue);
+                detailsStore.merge(robotDetail, 1, Integer::sum);
             }
         }
     }

@@ -7,8 +7,8 @@ import java.util.List;
 @AllArgsConstructor
 public class DayChange implements Runnable {
 
-    private final List<RobotDetail> dump;
     private static final long DAY_LENGTH = 100L;
+    private final List<RobotDetail> dump;
     private int daysNumber;
 
     @Override
